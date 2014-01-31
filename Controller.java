@@ -1,0 +1,119 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package mcmap;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+
+/**
+ *
+ * @author Tomek
+ */
+public class Controller extends Thread{
+
+    static int licznik = 0;
+    
+    public static void runProcess(String command) throws IOException {
+        BufferedWriter outputWriter = null;
+        BufferedReader inputReader = null;
+        try {
+            Process process = Runtime.getRuntime().exec(command);
+            InputStream inputStream = process.getInputStream();
+            OutputStream outputStream = process.getOutputStream();
+            outputWriter = new BufferedWriter(new OutputStreamWriter(
+                    outputStream));
+            inputReader = new BufferedReader(new InputStreamReader(inputStream));
+ 
+            String line = null;
+            while ((line = inputReader.readLine()) != null) {
+                processLine(line);
+            }
+        } finally {
+            outputWriter.close();
+            inputReader.close();
+        }
+    }
+
+    private static void processLine(String line) {
+        System.out.println(++licznik + ": " + line);
+    }
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) throws IOException, InterruptedException    
+    {
+        
+        new Window().setVisible(true);
+        
+        for (int i = 0; i < 0; i++) {
+            new Controller().start();
+        }
+
+        
+        Thread.sleep(100);
+        runProcess("d:\\dropbox\\path\\mcmap.exe");
+        Thread.sleep(100);
+        runProcess("d:\\dropbox\\komlogo\\comlogo.exe");
+        
+    }
+    
+    public void run()
+    {
+        System.out.println("runnąłem się");
+        try{
+        runProcess("d:\\dropbox\\path\\mcmap.exe c:\\users\\tomek\\appdata\\roaming\\.minecraft\\saves\\m -file testmcmapjava.png");
+        
+        }catch(IOException e)
+        {
+            
+        }
+    }
+    
+}
+
+
+/*
+
+    public static void runProcess(String command) throws IOException {
+        BufferedWriter outputWriter = null;
+        BufferedReader inputReader = null;
+        try {
+            Process process = Runtime.getRuntime().exec(command);
+            InputStream inputStream = process.getInputStream();
+            OutputStream outputStream = process.getOutputStream();
+            outputWriter = new BufferedWriter(new OutputStreamWriter(
+                    outputStream));
+            inputReader = new BufferedReader(new InputStreamReader(inputStream));
+ 
+            String line = null;
+            while ((line = inputReader.readLine()) != null) {
+                processLine(line);
+            }
+        } finally {
+            outputWriter.close();
+            inputReader.close();
+        }
+    }
+
+    private static void processLine(String line) {
+        System.out.println(line);
+    }
+
+    public static void main(String[] args) throws IOException {
+        System.out.println("");
+        runProcess("top -b -n 1");
+ 
+    }
+
+
+*/
