@@ -8,11 +8,13 @@ package mcmap;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 /**
  *
@@ -22,13 +24,17 @@ public class Controller extends Thread{
 
     static int licznik = 0;
     
-    public static void runProcess(String command) throws IOException {
+    public static void runProcess(String command) {
+        if (0==0)return;
+        
         BufferedWriter outputWriter = null;
         BufferedReader inputReader = null;
         try {
             Process process = Runtime.getRuntime().exec(command);
             InputStream inputStream = process.getInputStream();
             OutputStream outputStream = process.getOutputStream();
+            
+            System.out.println("nazwa "+outputStream);
             outputWriter = new BufferedWriter(new OutputStreamWriter(
                     outputStream));
             inputReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -37,9 +43,15 @@ public class Controller extends Thread{
             while ((line = inputReader.readLine()) != null) {
                 processLine(line);
             }
-        } finally {
-            outputWriter.close();
-            inputReader.close();
+        } catch (IOException e)
+        {
+            System.out.println("nieudane otwieranie " + command);
+        }
+        finally {
+            try{
+                outputWriter.close();
+                inputReader.close();
+            }catch(Exception e){System.out.println("nieudane zamykanie "+command);}
         }
     }
 
@@ -50,11 +62,20 @@ public class Controller extends Thread{
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException, InterruptedException    
+    public static void main(String[] args) throws InterruptedException   
     {
         
-        new Window().setVisible(true);
+        File appdata = new File(System.getenv("APPDATA")+"\\.minecraft\\saves");
+        File[] files = appdata.listFiles();
+        for (File file: files)
+        {
+            if (file.isDirectory())
+            System.out.println(file.getName());
+        }
         
+        
+        new Window();
+
         for (int i = 0; i < 0; i++) {
             new Controller().start();
         }
@@ -70,13 +91,8 @@ public class Controller extends Thread{
     public void run()
     {
         System.out.println("runnąłem się");
-        try{
         runProcess("d:\\dropbox\\path\\mcmap.exe c:\\users\\tomek\\appdata\\roaming\\.minecraft\\saves\\m -file testmcmapjava.png");
         
-        }catch(IOException e)
-        {
-            
-        }
     }
     
 }

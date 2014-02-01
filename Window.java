@@ -6,7 +6,16 @@
 
 package mcmap;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
 import javax.swing.UIManager;
 
 /**
@@ -15,21 +24,49 @@ import javax.swing.UIManager;
  */
 public class Window extends javax.swing.JFrame {
 
+
+        
     /**
      * Creates new form NewJFrame
      */
     public Window() {
+        main(null);
         initComponents();
+        
+        String[] combomodel = new String[30];
+        for (int i = 0; i < 30; ) {
+            combomodel[i] = "Item " + ++i;
+        }
+        
+        File appdata = new File(System.getenv("APPDATA")+"\\.minecraft\\saves");
+        File[] files = appdata.listFiles();
+        int dirs = 0;
+        for (File file: files)
+        {
+            if (file.isDirectory())
+            {
+                //System.out.println(file.getName());
+                dirs++;
+            }
+        }
+        String[] combomodell = new String[dirs];
+        int j = 0;
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].isDirectory())
+            combomodell[j++] = files[i].getName();
+        }
+        
+        ComboSelectWorld.setModel(new javax.swing.DefaultComboBoxModel(combomodell));
+        ComboSelectWorld.setSelectedItem(null);
+        
+        //System.out.println(System.getenv());
+        //lTitle.setText("<html><img src=file:///D:\\Dropbox\\NetBeansProjects\\mcmap\\East-wyjebmnienazbityryj.png></html>");
+
         this.setVisible(true);
         
-        
-                                try{
-        Controller.runProcess("c:\\windows\\system32\\calc.exe");
-        
-        }catch(IOException e)
-        {
-            
-        }
+        new RunMe("D:\\Dropbox\\PATH\\mcmap.exe",this).start();
+                
+        //Controller.runProcess("c:\\windows\\system32\\calc.exe");
     }
 
     /**
@@ -41,31 +78,218 @@ public class Window extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenu1 = new javax.swing.JMenu();
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        jPopupMenu2 = new javax.swing.JPopupMenu();
         jProgressBar1 = new javax.swing.JProgressBar();
+        lTitle = new javax.swing.JLabel();
+        jScrollBar1 = new javax.swing.JScrollBar();
+        memVal = new javax.swing.JSlider();
+        ComboSelectWorld = new javax.swing.JComboBox();
+        jLabel1 = new javax.swing.JLabel();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
+        SelectedWorldPath = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList();
+        OutputFilename = new javax.swing.JTextField();
+        generateMapButton = new javax.swing.JButton();
+        jProgressBar2 = new javax.swing.JProgressBar();
+        otherParameters = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        memLabel = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenu4 = new javax.swing.JMenu();
+        jRadioButtonMenuItem1 = new javax.swing.JRadioButtonMenuItem();
+        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
+
+        jMenu1.setText("jMenu1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jProgressBar1.setValue(45);
+        lTitle.setText("<html>\n<b><font color=red>dupa</font></b> \n<img width=90 height=90>\n</html>");
+
+        jScrollBar1.setMaximum(30);
+        jScrollBar1.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
+
+        memVal.setMaximum(1400);
+        memVal.setMinimum(700);
+        memVal.setValue(1081);
+        memVal.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                zmianaLimituPamieci(evt);
+            }
+        });
+
+        ComboSelectWorld.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ComboSelectWorld.setSelectedItem(null);
+        ComboSelectWorld.setToolTipText("");
+        ComboSelectWorld.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                WybranoSwiat(evt);
+            }
+        });
+
+        jLabel1.setText("Output filename");
+
+        jRadioButton1.setText("Singleplayer Save");
+
+        jRadioButton2.setText("Custom path");
+
+        jList1.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+        jList1.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(jList1);
+
+        generateMapButton.setText("Generate map");
+        generateMapButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generujSwiat(evt);
+            }
+        });
+
+        jLabel2.setText("Other params");
+
+        jLabel3.setText("Memory limit (use carefuly)");
+
+        memLabel.setText("1800 MB");
+
+        jMenu2.setText("File");
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setText("jMenuItem1");
+        jMenu2.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("Edit");
+        jMenuBar1.add(jMenu3);
+
+        jMenu4.setText("jMenu4");
+
+        jRadioButtonMenuItem1.setSelected(true);
+        jRadioButtonMenuItem1.setText("jRadioButtonMenuItem1");
+        jMenu4.add(jRadioButtonMenuItem1);
+
+        jCheckBoxMenuItem1.setSelected(true);
+        jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
+        jMenu4.add(jCheckBoxMenuItem1);
+
+        jMenuBar1.add(jMenu4);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(123, 123, 123)
-                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(330, Short.MAX_VALUE))
+                .addGap(19, 19, 19)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(lTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 157, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jRadioButton1)
+                            .addComponent(jLabel1)
+                            .addComponent(jRadioButton2)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addGap(36, 36, 36)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(memVal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(memLabel))
+                            .addComponent(otherParameters, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(generateMapButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ComboSelectWorld, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(SelectedWorldPath)
+                            .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(OutputFilename)
+                            .addComponent(jProgressBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(158, 158, 158)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ComboSelectWorld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jRadioButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jRadioButton2)
+                    .addComponent(SelectedWorldPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(OutputFilename, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5)
+                .addComponent(generateMapButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(252, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jProgressBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(otherParameters, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(memVal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(memLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void WybranoSwiat(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_WybranoSwiat
+        if (ComboSelectWorld.getSelectedIndex() == -1) return;
+        SelectedWorldPath.setText(System.getenv("APPDATA")+"\\.minecraft\\saves\\"
+                +ComboSelectWorld.getItemAt(ComboSelectWorld.getSelectedIndex()).toString());
+        OutputFilename.setText("East-" + ComboSelectWorld.getItemAt(ComboSelectWorld.getSelectedIndex()).toString() + ".png");
+    }//GEN-LAST:event_WybranoSwiat
+
+    private void generujSwiat(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generujSwiat
+        new RunMe("D:\\Dropbox\\PATH\\mcmap.exe \""+
+                SelectedWorldPath.getText()+
+                "\" -file \""+
+                OutputFilename.getText()+
+                "\" -mem "+
+                new Integer((int)Math.pow(2,memVal.getValue()/(float)100))+
+                " "+
+                otherParameters.getText()
+                ,this).start();
+        
+    }//GEN-LAST:event_generujSwiat
+
+    private void zmianaLimituPamieci(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_zmianaLimituPamieci
+        memLabel.setText(new Integer((int)Math.pow(2,memVal.getValue()/(float)100)).toString() + " MB");
+    }//GEN-LAST:event_zmianaLimituPamieci
 
     /**
      * @param args the command line arguments
@@ -106,15 +330,48 @@ public class Window extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
+        /*
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Window().setVisible(true);
  
             }
         });
+                */
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JProgressBar jProgressBar1;
+    private javax.swing.JComboBox ComboSelectWorld;
+    private javax.swing.JTextField OutputFilename;
+    private javax.swing.JTextField SelectedWorldPath;
+    javax.swing.JButton generateMapButton;
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    javax.swing.JList jList1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JPopupMenu jPopupMenu2;
+    javax.swing.JProgressBar jProgressBar1;
+    javax.swing.JProgressBar jProgressBar2;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
+    private javax.swing.JScrollBar jScrollBar1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lTitle;
+    private javax.swing.JLabel memLabel;
+    private javax.swing.JSlider memVal;
+    private javax.swing.JTextField otherParameters;
     // End of variables declaration//GEN-END:variables
+
+    static String lang = "Język polski";
+
 }
