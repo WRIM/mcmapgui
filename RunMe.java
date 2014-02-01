@@ -18,7 +18,7 @@ import javax.swing.DefaultListModel;
 
 /**
  *
- * @author Tomek
+ * @author WRIM
  */
 public class RunMe extends Thread {
     
@@ -38,7 +38,7 @@ public class RunMe extends Thread {
         myWindow.generateMapButton.setEnabled(false);
         
         DefaultListModel jakismodel = new DefaultListModel();
-        jakismodel.addElement("Command: "+command);
+        jakismodel.addElement(command);
         myWindow.jList1.setModel(jakismodel);
         
         try {

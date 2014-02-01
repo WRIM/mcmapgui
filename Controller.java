@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Tomek
+ * @author WRIM
  */
 public class Controller extends Thread{
 
