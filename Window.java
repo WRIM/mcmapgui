@@ -37,7 +37,7 @@ public class Window extends javax.swing.JFrame {
      * Creates new form NewJFrame
      */
     public Window() {
-        main(null);
+        main(new String[]{"Constructor"});
         initComponents();
         
         String[] combomodel = new String[30];
@@ -143,6 +143,7 @@ public class Window extends javax.swing.JFrame {
         lRenderType = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         listRenderType = new javax.swing.JList();
+        checkBoxIncludeSkylight = new javax.swing.JCheckBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         mInformation = new javax.swing.JMenu();
         mVersion = new javax.swing.JMenuItem();
@@ -153,11 +154,17 @@ public class Window extends javax.swing.JFrame {
         mLanguage = new javax.swing.JMenu();
         mLangEnglish = new javax.swing.JRadioButtonMenuItem();
         mLangPolish = new javax.swing.JRadioButtonMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem3 = new javax.swing.JMenuItem();
 
         jMenu1.setText("jMenu1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("mcmap 2.4.2b (2.4.2d update available)");
+        setMinimumSize(new java.awt.Dimension(460, 660));
 
         lTitle.setText("<html><a style=\"text-decoration:none;cursor:pointer;\" href=\"http://wrim.pl/mcmap/\">Manually Check for updates</a></html>");
         lTitle.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -168,7 +175,7 @@ public class Window extends javax.swing.JFrame {
         });
 
         memVal.setMaximum(1400);
-        memVal.setMinimum(700);
+        memVal.setMinimum(701);
         memVal.setValue(1081);
         memVal.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -181,7 +188,7 @@ public class Window extends javax.swing.JFrame {
         ComboSelectWorld.setToolTipText("");
         ComboSelectWorld.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                WybranoSwiat(evt);
+                selectWorld(evt);
             }
         });
 
@@ -233,12 +240,17 @@ public class Window extends javax.swing.JFrame {
         });
         listTopLeftCorner.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         listTopLeftCorner.setSelectedIndex(0);
+        listTopLeftCorner.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listTopLeftCornerValueChanged(evt);
+            }
+        });
         jScrollPane2.setViewportView(listTopLeftCorner);
 
         lTopLeftCorner.setText("Top-left corner:");
 
         checkBox64bit.setSelected(true);
-        checkBox64bit.setText("64 bit version");
+        checkBox64bit.setText("64 bit version / use WINE");
         checkBox64bit.setEnabled(false);
         checkBox64bit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -255,6 +267,11 @@ public class Window extends javax.swing.JFrame {
         });
         listRenderWorld.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         listRenderWorld.setSelectedIndex(0);
+        listRenderWorld.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listRenderWorldValueChanged(evt);
+            }
+        });
         jScrollPane3.setViewportView(listRenderWorld);
 
         lRenderType.setText("Render type:");
@@ -267,13 +284,20 @@ public class Window extends javax.swing.JFrame {
         listRenderType.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         listRenderType.setToolTipText("");
         listRenderType.setSelectedIndex(0);
+        listRenderType.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listRenderTypeValueChanged(evt);
+            }
+        });
         jScrollPane4.setViewportView(listRenderType);
+
+        checkBoxIncludeSkylight.setText("Include skylight");
 
         jMenuBar1.setToolTipText("");
 
-        mInformation.setText("Information");
+        mInformation.setText("About");
 
-        mVersion.setText("Version: 2.4.2b");
+        mVersion.setText("Version: N/A");
         mVersion.setToolTipText("");
         mVersion.setEnabled(false);
         mInformation.add(mVersion);
@@ -311,6 +335,20 @@ public class Window extends javax.swing.JFrame {
 
         jMenuBar1.add(mLanguage);
 
+        jMenu2.setText("Advanced");
+
+        jMenuItem4.setText("Save settings");
+        jMenu2.add(jMenuItem4);
+
+        jMenuItem5.setText("Reset settings");
+        jMenu2.add(jMenuItem5);
+        jMenu2.add(jSeparator2);
+
+        jMenuItem3.setText("Delete all worlds");
+        jMenu2.add(jMenuItem3);
+
+        jMenuBar1.add(jMenu2);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -318,23 +356,21 @@ public class Window extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(lOutputFilename)
-                                        .addComponent(lCustomPath)
-                                        .addComponent(lSingleplayerSave, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jButton1)
-                                .addComponent(lTopLeftCorner, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lRenderWorld, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lRenderType, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lOutputFilename)
+                            .addComponent(lCustomPath)
+                            .addComponent(lSingleplayerSave, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                            .addComponent(lTopLeftCorner, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                            .addComponent(lRenderWorld, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                            .addComponent(lRenderType, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                            .addComponent(jButton1)
+                            .addComponent(checkBoxIncludeSkylight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(10, 10, 10)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ComboSelectWorld, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -342,30 +378,26 @@ public class Window extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(newWindowButton, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(generateMapButton, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE))
+                                .addComponent(generateMapButton, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE))
                             .addComponent(consolePanel, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(OutputFilename, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(checkBox64bit)
+                            .addComponent(lOtherParams, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lMemoryLimit, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE))
+                        .addGap(8, 8, 8)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(lMemoryLimit, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
-                                        .addComponent(lOtherParams, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addComponent(checkBox64bit))
+                                .addComponent(memVal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jProgressBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(memVal, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(memLabel))
-                                    .addComponent(jProgressBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(otherParameters))))))
+                                .addComponent(memLabel))
+                            .addComponent(otherParameters)
+                            .addComponent(jProgressBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jProgressBar1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -404,9 +436,11 @@ public class Window extends javax.swing.JFrame {
                                 .addComponent(lRenderType)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(32, 32, 32)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(checkBoxIncludeSkylight)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                                 .addComponent(jButton1)
-                                .addGap(0, 26, Short.MAX_VALUE)))
+                                .addGap(1, 1, 1)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -432,24 +466,74 @@ public class Window extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void WybranoSwiat(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_WybranoSwiat
+    private void selectWorld(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_selectWorld
         if (ComboSelectWorld.getSelectedIndex() == -1) return;
         SelectedWorldPath.setText(System.getenv("APPDATA")+"\\.minecraft\\saves\\"
                 +ComboSelectWorld.getItemAt(ComboSelectWorld.getSelectedIndex()).toString());
-        OutputFilename.setText("East-" + ComboSelectWorld.getItemAt(ComboSelectWorld.getSelectedIndex()).toString() + ".png");
-    }//GEN-LAST:event_WybranoSwiat
+        changeOutputFileName();
+    }//GEN-LAST:event_selectWorld
 
     private void generujSwiat(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generujSwiat
-        new RunMe(mcmapEXE+
+        String direction="", renderWorld="", renderType="";
+        
+        switch (listTopLeftCorner.getSelectedIndex())
+        {
+            case 0:
+                direction = " -east";
+                break;
+            case 1:
+                direction = " -south";
+                break;
+            case 2:
+                direction = " -west";
+                break;
+            case 3:
+                direction = " -north";
+                break;
+        }
+        switch (listRenderWorld.getSelectedIndex())
+        {
+            case 0:
+                renderWorld = "";
+                break;
+            case 1:
+                renderWorld = " -hell";
+                break;
+            case 2:
+                renderWorld = " -end";
+                break;
+        }
+        if (listRenderWorld.getSelectedIndex() == 0)
+        switch (listRenderType.getSelectedIndex())
+        {
+            case 0:
+                renderType = "";
+                break;
+            case 1:
+                renderType = " -night";
+                break;
+            case 2:
+                renderType = " -cave";
+                break;
+            case 3:
+                renderType = " -blendcave";
+                break;
+        }
+        
+        String command = mcmapEXE+
                 " \""+
                 SelectedWorldPath.getText()+
                 "\" -file \""+
                 OutputFilename.getText()+
                 "\" -mem "+
                 new Integer((int)Math.pow(2,memVal.getValue()/(float)100))+
+                direction+
+                renderWorld+
+                renderType+
+                (checkBoxIncludeSkylight.isSelected() ? " -skylight" : "")+
                 " "+
-                otherParameters.getText()
-                ,this).start();
+                otherParameters.getText();
+        new RunMe(command,this).start();
         
     }//GEN-LAST:event_generujSwiat
 
@@ -474,7 +558,7 @@ public class Window extends javax.swing.JFrame {
         map.put("lOutputFilename", "Output filename");
         map.put("lSingleplayerSave", "Singleplayer Save");
         map.put("lTitle", "<html><a style=\"text-decoration:none;cursor:pointer;\" href=\"http://wrim.pl/mcmap/\">Manually Check for updates</a></html>");
-        map.put("mInformation", "Information");
+        map.put("mInformation", "About");
         map.put("lTopLeftCorner", "Top-left corner:");
         map.put("lRenderWorld", "Render World:");
         map.put("lRenderType", "Render type:");
@@ -558,6 +642,70 @@ public class Window extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_changeVersion
 
+    private void listTopLeftCornerValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listTopLeftCornerValueChanged
+        changeOutputFileName();
+    }//GEN-LAST:event_listTopLeftCornerValueChanged
+
+    private void listRenderWorldValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listRenderWorldValueChanged
+        changeOutputFileName();
+    }//GEN-LAST:event_listRenderWorldValueChanged
+
+    private void listRenderTypeValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listRenderTypeValueChanged
+        changeOutputFileName();
+    }//GEN-LAST:event_listRenderTypeValueChanged
+
+    private void changeOutputFileName() {                                      
+        if (ComboSelectWorld.getSelectedIndex() == -1) return;
+        
+        String fileName = "";
+        switch (listTopLeftCorner.getSelectedIndex())
+        {
+            case 0:
+                fileName += "East-";
+                break;
+            case 1:
+                fileName += "South-";
+                break;
+            case 2:
+                fileName += "West-";
+                break;
+            case 3:
+                fileName += "North-";
+                break;
+        }
+        fileName += ComboSelectWorld.getItemAt(ComboSelectWorld.getSelectedIndex()).toString();
+        switch (listRenderWorld.getSelectedIndex())
+        {
+            case 0:
+                fileName += "";
+                break;
+            case 1:
+                fileName += "_Nether";
+                break;
+            case 2:
+                fileName += "_End";
+                break;
+        }
+        if (listRenderWorld.getSelectedIndex() == 0)
+        switch (listRenderType.getSelectedIndex())
+        {
+            case 0:
+                fileName += "";
+                break;
+            case 1:
+                fileName += "_Night";
+                break;
+            case 2:
+                fileName += "_Underground";
+                break;
+            case 3:
+                fileName += "_Blendcaves";
+                break;
+        }
+        
+        OutputFilename.setText(fileName+".png");
+    }                                     
+
     private void changeLanguage(HashMap<String, String> map)
     {
         //setLanguageElement(lCustomPath, "lCustomPath", map);
@@ -576,7 +724,7 @@ public class Window extends javax.swing.JFrame {
         newWindowButton.setText(map.get("newWindowButton"));
         generateMapButton.setText(map.get("generateMapButton"));
         
-        mVersion.setText(map.get("version") + "2.4.2b");
+        mVersion.setText(map.get("version") + "N/A");
         mUpdate.setText(map.get("updateTo") + "2.4.2d");
         
         DefaultListModel model;
@@ -651,14 +799,17 @@ public class Window extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        /*
+        
+        if (args.length == 1 && args[0].equals("Constructor"))
+            return;
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Window().setVisible(true);
  
             }
         });
-                */
+
         
     }
 
@@ -667,14 +818,19 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JTextField OutputFilename;
     private javax.swing.JTextField SelectedWorldPath;
     private javax.swing.JCheckBox checkBox64bit;
+    private javax.swing.JCheckBox checkBoxIncludeSkylight;
     javax.swing.JList consoleList;
     private javax.swing.JScrollPane consolePanel;
     javax.swing.JButton generateMapButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JPopupMenu jPopupMenu2;
     javax.swing.JProgressBar jProgressBar1;
@@ -683,6 +839,7 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JRadioButton lCustomPath;
     private javax.swing.JLabel lMemoryLimit;
     private javax.swing.JLabel lOtherParams;
@@ -703,7 +860,7 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JMenuItem mVersion;
     private javax.swing.JLabel memLabel;
     private javax.swing.JSlider memVal;
-    private javax.swing.JButton newWindowButton;
+    javax.swing.JButton newWindowButton;
     private javax.swing.JTextField otherParameters;
     // End of variables declaration//GEN-END:variables
 

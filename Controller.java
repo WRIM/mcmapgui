@@ -34,7 +34,7 @@ public class Controller extends Thread{
             InputStream inputStream = process.getInputStream();
             OutputStream outputStream = process.getOutputStream();
             
-            System.out.println("nazwa "+outputStream);
+            System.out.println("nazwa "+command);
             outputWriter = new BufferedWriter(new OutputStreamWriter(
                     outputStream));
             inputReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -64,8 +64,12 @@ public class Controller extends Thread{
      */
     public static void main(String[] args) throws InterruptedException   
     {
-        
-        File appdata = new File(System.getenv("APPDATA")+"\\.minecraft\\saves");
+     
+        File appdata = new File(System.getenv("APPDATA")+"");
+        if (System.getenv("APPDATA") == null)
+        {
+            appdata = new File(System.getProperty("user.home")+"");
+        }
         File[] files = appdata.listFiles();
         for (File file: files)
         {
@@ -82,10 +86,23 @@ public class Controller extends Thread{
 
         
         Thread.sleep(100);
-        runProcess("d:\\dropbox\\path\\mcmap.exe");
+        runProcess("d:/dropbox/path/mcmap.exe");
         Thread.sleep(100);
         runProcess("d:\\dropbox\\komlogo\\comlogo.exe");
         
+        System.out.println(System.getenv("APPDATA"));
+        System.out.println(System.getProperty("user.home"));
+        System.out.println(System.getProperty("os.name"));
+        
+        System.out.println(System.getProperties().toString().replace(',', '\n'));
+        System.out.println("--------------------------------------");
+        System.out.println(System.getenv().toString().replace(',', '\n'));
+        
+        
+        System.out.println(System.getProperty("user.language"));
+        System.out.println(System.getProperty("file.separator"));
+        
+
     }
     
     public void run()

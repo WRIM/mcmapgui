@@ -1,0 +1,8 @@
+TODO:
+-read minecraft profiles (minecraft_profiles.json)
+-implements languages
+-autosaving settings
+-save on close and question if map is not fully renderred
+-breaking rendering
+-fixing window constructor
+DONE:

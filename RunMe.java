@@ -22,8 +22,8 @@ import javax.swing.DefaultListModel;
  */
 public class RunMe extends Thread {
     
-    static String command;
-    static Window myWindow;
+    String command;
+    Window myWindow;
     
     public RunMe(String cmd, Window win)
     {
@@ -36,9 +36,9 @@ public class RunMe extends Thread {
         BufferedReader inputReader = null;
         
         myWindow.generateMapButton.setEnabled(false);
+        //myWindow.newWindowButton.setEnabled(false);
         
         DefaultListModel jakismodel = new DefaultListModel();
-        jakismodel.addElement("<html><b><font color=red>New launcher allowed</font></b></html>");
         jakismodel.addElement(command);
         myWindow.consoleList.setModel(jakismodel);
         
@@ -65,6 +65,7 @@ public class RunMe extends Thread {
                 if (line.equals("")) continue;
                 if (line.charAt(0) == '[')
                 {
+                    if (line.indexOf('.') == -1) continue;
                     String liczba = line.substring(1, line.indexOf('.'));
                     myWindow.jProgressBar1.setValue(Integer.parseInt(liczba));
                 }
@@ -99,6 +100,7 @@ public class RunMe extends Thread {
             }catch(Exception e){System.out.println("nieudane zamykanie "+command);}
         }
         myWindow.generateMapButton.setEnabled(true);
+        //myWindow.newWindowButton.setEnabled(true);
     }
         
       public boolean check() {
@@ -142,7 +144,7 @@ public class RunMe extends Thread {
                 {
                     jakismodel.addElement(line);
                     myWindow.consoleList.setModel(jakismodel);
-                    myWindow.consoleList.ensureIndexIsVisible(count++);
+                    //myWindow.consoleList.ensureIndexIsVisible(count++);
                     //myWindow.jList1.setSelectedIndex(count++);
                 }
                 if (line.substring(0, 5).equals("Pass "))
