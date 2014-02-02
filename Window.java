@@ -6,7 +6,10 @@
 
 package mcmap;
 
+import java.awt.Component;
 import java.awt.Desktop;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,7 +21,10 @@ import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /**
@@ -26,8 +32,6 @@ import javax.swing.UIManager;
  * @author Tomek
  */
 public class Window extends javax.swing.JFrame {
-
-
         
     /**
      * Creates new form NewJFrame
@@ -66,10 +70,36 @@ public class Window extends javax.swing.JFrame {
         //lTitle.setText("<html><img src=file:///D:\\Dropbox\\NetBeansProjects\\mcmap\\East-wyjebmnienazbityryj.png></html>");
 
         this.setVisible(true);
+
+        /*
+        addWindowListener(new WindowAdapter() {
+  public void windowClosing(WindowEvent e) {
+    int confirmed = JOptionPane.showConfirmDialog(null, 
+        "Are you sure you want to exit the program?", "Exit Program Message Box",
+        JOptionPane.YES_NO_OPTION);
+
+    if (confirmed == JOptionPane.YES_OPTION) {
+      dispose();
+    }
+  }
+});
+        */
         
-        new RunMe("D:\\Dropbox\\PATH\\mcmap.exe",this).start();
-                
+        if (new RunMe("mcmap64.exe",this).check())
+        {
+            mcmapEXE = "mcmap64.exe";
+            checkBox64bit.setEnabled(true);
+            checkBox64bit.setSelected(true);
+        }
+        else
+        {
+            new RunMe("mcmap.exe",this).check();
+            mcmapEXE = "mcmap.exe";
+            memVal.setMaximum(1159);
+        }
+        
         //Controller.runProcess("c:\\windows\\system32\\calc.exe");
+        
     }
 
     /**
@@ -88,26 +118,41 @@ public class Window extends javax.swing.JFrame {
         lTitle = new javax.swing.JLabel();
         memVal = new javax.swing.JSlider();
         ComboSelectWorld = new javax.swing.JComboBox();
-        jLabel1 = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
+        lOutputFilename = new javax.swing.JLabel();
+        lSingleplayerSave = new javax.swing.JRadioButton();
+        lCustomPath = new javax.swing.JRadioButton();
         SelectedWorldPath = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        consolePanel = new javax.swing.JScrollPane();
+        consoleList = new javax.swing.JList();
         OutputFilename = new javax.swing.JTextField();
         generateMapButton = new javax.swing.JButton();
         jProgressBar2 = new javax.swing.JProgressBar();
         otherParameters = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        lOtherParams = new javax.swing.JLabel();
+        lMemoryLimit = new javax.swing.JLabel();
         memLabel = new javax.swing.JLabel();
         newWindowButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        listTopLeftCorner = new javax.swing.JList();
+        lTopLeftCorner = new javax.swing.JLabel();
+        checkBox64bit = new javax.swing.JCheckBox();
+        lRenderWorld = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        listRenderWorld = new javax.swing.JList();
+        lRenderType = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        listRenderType = new javax.swing.JList();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu2 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        mInformation = new javax.swing.JMenu();
+        mVersion = new javax.swing.JMenuItem();
+        mUpdate = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
-        jRadioButtonMenuItem1 = new javax.swing.JRadioButtonMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        mLanguage = new javax.swing.JMenu();
+        mLangEnglish = new javax.swing.JRadioButtonMenuItem();
+        mLangPolish = new javax.swing.JRadioButtonMenuItem();
 
         jMenu1.setText("jMenu1");
 
@@ -140,19 +185,19 @@ public class Window extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Output filename");
+        lOutputFilename.setText("Output filename");
 
-        jRadioButton1.setText("Singleplayer Save");
+        lSingleplayerSave.setText("Singleplayer Save");
 
-        jRadioButton2.setText("Custom path");
+        lCustomPath.setText("Custom path");
 
-        jList1.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
-        jList1.setModel(new javax.swing.AbstractListModel() {
+        consoleList.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+        consoleList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane1.setViewportView(jList1);
+        consolePanel.setViewportView(consoleList);
 
         generateMapButton.setText("Generate map");
         generateMapButton.addActionListener(new java.awt.event.ActionListener() {
@@ -161,11 +206,11 @@ public class Window extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Other params");
+        lOtherParams.setText("Other params");
 
-        jLabel3.setText("Memory limit (use carefuly)");
+        lMemoryLimit.setText("Memory limit (use carefuly)");
 
-        memLabel.setText("1800 MB");
+        memLabel.setText("1795 MB");
 
         newWindowButton.setText("New window");
         newWindowButton.addActionListener(new java.awt.event.ActionListener() {
@@ -174,27 +219,97 @@ public class Window extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        listTopLeftCorner.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "East", "South", "West", "North" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        listTopLeftCorner.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        listTopLeftCorner.setSelectedIndex(0);
+        jScrollPane2.setViewportView(listTopLeftCorner);
+
+        lTopLeftCorner.setText("Top-left corner:");
+
+        checkBox64bit.setSelected(true);
+        checkBox64bit.setText("64 bit version");
+        checkBox64bit.setEnabled(false);
+        checkBox64bit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeVersion(evt);
+            }
+        });
+
+        lRenderWorld.setText("Render world:");
+
+        listRenderWorld.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Overworld", "Nether", "End" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        listRenderWorld.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        listRenderWorld.setSelectedIndex(0);
+        jScrollPane3.setViewportView(listRenderWorld);
+
+        lRenderType.setText("Render type:");
+
+        listRenderType.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Day", "Night", "Underground", "Overworld + caves" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        listRenderType.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        listRenderType.setToolTipText("");
+        listRenderType.setSelectedIndex(0);
+        jScrollPane4.setViewportView(listRenderType);
+
         jMenuBar1.setToolTipText("");
 
-        jMenu2.setText("Information");
+        mInformation.setText("Information");
 
-        jMenuItem2.setText("Version: 2.4.2b");
-        jMenuItem2.setToolTipText("");
-        jMenuItem2.setEnabled(false);
-        jMenu2.add(jMenuItem2);
+        mVersion.setText("Version: 2.4.2b");
+        mVersion.setToolTipText("");
+        mVersion.setEnabled(false);
+        mInformation.add(mVersion);
 
-        jMenuItem1.setText("Update to: 2.4.2d");
-        jMenu2.add(jMenuItem1);
+        mUpdate.setText("Update to: 2.4.2d");
+        mInformation.add(mUpdate);
+        mInformation.add(jSeparator1);
 
-        jMenuBar1.add(jMenu2);
+        jMenuItem1.setText("Changelog");
+        mInformation.add(jMenuItem1);
 
-        jMenu3.setText("Language");
+        jMenuItem2.setText("License");
+        mInformation.add(jMenuItem2);
 
-        jRadioButtonMenuItem1.setSelected(true);
-        jRadioButtonMenuItem1.setText("English (default)");
-        jMenu3.add(jRadioButtonMenuItem1);
+        jMenuBar1.add(mInformation);
 
-        jMenuBar1.add(jMenu3);
+        mLanguage.setText("Language");
+
+        mLangEnglish.setSelected(true);
+        mLangEnglish.setText("English (default)");
+        mLangEnglish.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeLanguageEnglish(evt);
+            }
+        });
+        mLanguage.add(mLangEnglish);
+
+        mLangPolish.setText("Polski (polish)");
+        mLangPolish.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeLanguagePolish(evt);
+            }
+        });
+        mLanguage.add(mLangPolish);
+
+        jMenuBar1.add(mLanguage);
 
         setJMenuBar(jMenuBar1);
 
@@ -205,20 +320,30 @@ public class Window extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jRadioButton1)
-                            .addComponent(jLabel1)
-                            .addComponent(jRadioButton2))
-                        .addGap(54, 54, 54)
+                        .addGap(16, 16, 16)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(lOutputFilename)
+                                        .addComponent(lCustomPath)
+                                        .addComponent(lSingleplayerSave, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jButton1)
+                                .addComponent(lTopLeftCorner, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lRenderWorld, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lRenderType, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ComboSelectWorld, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(SelectedWorldPath)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(newWindowButton, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(generateMapButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(generateMapButton, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE))
+                            .addComponent(consolePanel, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(OutputFilename, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap()
@@ -228,17 +353,19 @@ public class Window extends javax.swing.JFrame {
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3))
-                                .addGap(46, 46, 46)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(lMemoryLimit, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                                        .addComponent(lOtherParams, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(checkBox64bit))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jProgressBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(memVal, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(memLabel))
-                                    .addComponent(otherParameters, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jProgressBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                    .addComponent(jProgressBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(otherParameters))))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -247,38 +374,56 @@ public class Window extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ComboSelectWorld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton1))
+                    .addComponent(lSingleplayerSave))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButton2)
+                    .addComponent(lCustomPath)
                     .addComponent(SelectedWorldPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                    .addComponent(lOutputFilename)
                     .addComponent(OutputFilename, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(5, 5, 5)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(generateMapButton)
                     .addComponent(newWindowButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jProgressBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(otherParameters, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(memVal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(memLabel))
-                        .addGap(34, 34, 34))
+                            .addComponent(consolePanel)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lTopLeftCorner)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(11, 11, 11)
+                                .addComponent(lRenderWorld)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lRenderType)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(32, 32, 32)
+                                .addComponent(jButton1)
+                                .addGap(0, 26, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jProgressBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(checkBox64bit)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(otherParameters, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lOtherParams))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(memVal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(memLabel)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lMemoryLimit)
                         .addGap(29, 29, 29)
                         .addComponent(lTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -295,7 +440,8 @@ public class Window extends javax.swing.JFrame {
     }//GEN-LAST:event_WybranoSwiat
 
     private void generujSwiat(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generujSwiat
-        new RunMe("D:\\Dropbox\\PATH\\mcmap.exe \""+
+        new RunMe(mcmapEXE+
+                " \""+
                 SelectedWorldPath.getText()+
                 "\" -file \""+
                 OutputFilename.getText()+
@@ -319,6 +465,152 @@ public class Window extends javax.swing.JFrame {
         try{Desktop.getDesktop().browse(new URI("http://wrim.pl/mcmap"));}
         catch(IOException|URISyntaxException e){}
     }//GEN-LAST:event_goToSite
+
+    private void changeLanguageEnglish(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeLanguageEnglish
+        HashMap<String, String> map = new HashMap<>();
+        map.put("lCustomPath", "Custom path");
+        map.put("lMemoryLimit", "Memory limit (use carefuly)");
+        map.put("lOtherParams", "Other params");
+        map.put("lOutputFilename", "Output filename");
+        map.put("lSingleplayerSave", "Singleplayer Save");
+        map.put("lTitle", "<html><a style=\"text-decoration:none;cursor:pointer;\" href=\"http://wrim.pl/mcmap/\">Manually Check for updates</a></html>");
+        map.put("mInformation", "Information");
+        map.put("lTopLeftCorner", "Top-left corner:");
+        map.put("lRenderWorld", "Render World:");
+        map.put("lRenderType", "Render type:");
+        map.put("checkBox64bit", "64 bit version");
+        map.put("mLanguage", "Language");
+        map.put("version", "Verion: ");
+        map.put("updateTo", "Update to: ");
+        map.put("newWindowButton", "New window");
+        map.put("generateMapButton", "Generate map");
+        
+        map.put("DirectionEast","East");
+        map.put("DirectionSouth","South");
+        map.put("DirectionWest","West");
+        map.put("DirectionNorth","North");
+        
+        map.put("RenderWorldOverworld","Overworld");
+        map.put("RenderWorldNether","Nether");
+        map.put("RenderWorldEnd","End");
+        
+        map.put("RenderTypeDay","Day");
+        map.put("RenderTypeNight","Night");
+        map.put("RenderTypeUnderground","Underground");
+        map.put("RenderTypeCaves","Overworld + caves");
+        
+        changeLanguage(map);
+        mLangEnglish.setSelected(true);
+    }//GEN-LAST:event_changeLanguageEnglish
+
+    private void changeLanguagePolish(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeLanguagePolish
+        HashMap<String, String> map = new HashMap<>();
+        map.put("lCustomPath", "Własna ścieżka");
+        map.put("lMemoryLimit", "Limit pamięci (używaj ostrożnie)");
+        map.put("lOtherParams", "Inne parametry");
+        map.put("lOutputFilename", "Nazwa obrazu");
+        map.put("lSingleplayerSave", "Domyślna ścieżka");
+        map.put("lTitle", "<html><a style=\"text-decoration:none;cursor:pointer;\" href=\"http://wrim.pl/mcmap/\">Ręcznie sprawdź dostępność aktualizacji</a></html>");
+        map.put("lTopLeftCorner", "Lewy górny narożnik:");
+        map.put("lRenderWorld", "Świat:");
+        map.put("lRenderType", "Typ generowania:");
+        map.put("checkBox64bit", "Wersja 64 bitowa");
+        map.put("mInformation", "Informacje");
+        map.put("mLanguage", "Język");
+        map.put("version", "Wersja: ");
+        map.put("updateTo", "Aktualizuj do ");
+        map.put("newWindowButton", "Nowe okno");
+        map.put("generateMapButton", "Generuj obraz mapy");
+        
+        map.put("DirectionEast","Wschód");
+        map.put("DirectionSouth","Południe");
+        map.put("DirectionWest","Zachód");
+        map.put("DirectionNorth","Północ");
+        
+        map.put("RenderWorldOverworld","Zwykły świat");
+        map.put("RenderWorldNether","Nether");
+        map.put("RenderWorldEnd","End");
+        
+        map.put("RenderTypeDay","Dzień");
+        map.put("RenderTypeNight","Noc");
+        map.put("RenderTypeUnderground","Podziemia");
+        map.put("RenderTypeCaves","Zwykły świat + jaskinie");
+        
+        changeLanguage(map);
+        mLangPolish.setSelected(true);
+        
+    }//GEN-LAST:event_changeLanguagePolish
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void changeVersion(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeVersion
+        if (checkBox64bit.isSelected())
+        {
+            mcmapEXE = "mcmap64.exe";
+            memVal.setMaximum(1400);
+        }
+        else
+        {
+            mcmapEXE = "mcmap.exe";
+            memVal.setMaximum(1159);
+        }
+    }//GEN-LAST:event_changeVersion
+
+    private void changeLanguage(HashMap<String, String> map)
+    {
+        //setLanguageElement(lCustomPath, "lCustomPath", map);
+        lCustomPath.setText(map.get("lCustomPath"));
+        lMemoryLimit.setText(map.get("lMemoryLimit"));
+        lOtherParams.setText(map.get("lOtherParams"));
+        lOutputFilename.setText(map.get("lOutputFilename"));
+        lSingleplayerSave.setText(map.get("lSingleplayerSave"));
+        lTitle.setText(map.get("lTitle"));
+        lTopLeftCorner.setText(map.get("lTopLeftCorner"));
+        lRenderWorld.setText(map.get("lRenderWorld"));
+        lRenderType.setText(map.get("lRenderType"));
+        checkBox64bit.setText(map.get("checkBox64bit"));
+        mInformation.setText(map.get("mInformation"));
+        mLanguage.setText(map.get("mLanguage"));
+        newWindowButton.setText(map.get("newWindowButton"));
+        generateMapButton.setText(map.get("generateMapButton"));
+        
+        mVersion.setText(map.get("version") + "2.4.2b");
+        mUpdate.setText(map.get("updateTo") + "2.4.2d");
+        
+        DefaultListModel model;
+        int selected;
+        
+        selected = listTopLeftCorner.getSelectedIndex();
+        model = new DefaultListModel();
+        model.addElement(map.get("DirectionEast"));
+        model.addElement(map.get("DirectionSouth"));
+        model.addElement(map.get("DirectionWest"));
+        model.addElement(map.get("DirectionNorth"));
+        listTopLeftCorner.setModel(model);
+        listTopLeftCorner.setSelectedIndex(selected);
+        
+        selected = listRenderWorld.getSelectedIndex();
+        model = new DefaultListModel();
+        model.addElement(map.get("RenderWorldOverworld"));
+        model.addElement(map.get("RenderWorldNether"));
+        model.addElement(map.get("RenderWorldEnd"));
+        listRenderWorld.setModel(model);
+        listRenderWorld.setSelectedIndex(selected);
+        
+        selected = listRenderType.getSelectedIndex();
+        model = new DefaultListModel();
+        model.addElement(map.get("RenderTypeDay"));
+        model.addElement(map.get("RenderTypeNight"));
+        model.addElement(map.get("RenderTypeUnderground"));
+        model.addElement(map.get("RenderTypeCaves"));
+        listRenderType.setModel(model);
+        listRenderType.setSelectedIndex(selected);
+        
+        mLangEnglish.setSelected(false);
+        mLangPolish.setSelected(false);
+    }
 
     /**
      * @param args the command line arguments
@@ -374,14 +666,12 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JComboBox ComboSelectWorld;
     private javax.swing.JTextField OutputFilename;
     private javax.swing.JTextField SelectedWorldPath;
+    private javax.swing.JCheckBox checkBox64bit;
+    javax.swing.JList consoleList;
+    private javax.swing.JScrollPane consolePanel;
     javax.swing.JButton generateMapButton;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    javax.swing.JList jList1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
@@ -389,17 +679,35 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JPopupMenu jPopupMenu2;
     javax.swing.JProgressBar jProgressBar1;
     javax.swing.JProgressBar jProgressBar2;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JRadioButton lCustomPath;
+    private javax.swing.JLabel lMemoryLimit;
+    private javax.swing.JLabel lOtherParams;
+    private javax.swing.JLabel lOutputFilename;
+    private javax.swing.JLabel lRenderType;
+    private javax.swing.JLabel lRenderWorld;
+    private javax.swing.JRadioButton lSingleplayerSave;
     private javax.swing.JLabel lTitle;
+    private javax.swing.JLabel lTopLeftCorner;
+    private javax.swing.JList listRenderType;
+    private javax.swing.JList listRenderWorld;
+    private javax.swing.JList listTopLeftCorner;
+    private javax.swing.JMenu mInformation;
+    private javax.swing.JRadioButtonMenuItem mLangEnglish;
+    private javax.swing.JRadioButtonMenuItem mLangPolish;
+    private javax.swing.JMenu mLanguage;
+    private javax.swing.JMenuItem mUpdate;
+    private javax.swing.JMenuItem mVersion;
     private javax.swing.JLabel memLabel;
     private javax.swing.JSlider memVal;
     private javax.swing.JButton newWindowButton;
     private javax.swing.JTextField otherParameters;
     // End of variables declaration//GEN-END:variables
 
-    static String lang = "Język polski";
+    //static String lang = "Język polski";
+    private static String mcmapEXE;
 
 }
