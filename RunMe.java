@@ -47,7 +47,7 @@ public class RunMe extends Thread {
             InputStream inputStream = process.getInputStream();
             OutputStream outputStream = process.getOutputStream();
 
-            System.out.println("nazwa "+outputStream);
+            System.out.println("Executing command: "+command);
             outputWriter = new BufferedWriter(new OutputStreamWriter(
                     outputStream));
             inputReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -119,7 +119,7 @@ public class RunMe extends Thread {
             InputStream inputStream = process.getInputStream();
             OutputStream outputStream = process.getOutputStream();
 
-            System.out.println("nazwa "+outputStream);
+            System.out.println("Executing command: "+command);
             outputWriter = new BufferedWriter(new OutputStreamWriter(
                     outputStream));
             inputReader = new BufferedReader(new InputStreamReader(inputStream));

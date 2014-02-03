@@ -8,6 +8,7 @@ package mcmap;
 
 import java.awt.Component;
 import java.awt.Desktop;
+import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
@@ -20,16 +21,22 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.DefaultListModel;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 /**
  *
- * @author Tomek
+ * @author WRIM
  */
 public class Window extends javax.swing.JFrame {
         
@@ -144,6 +151,11 @@ public class Window extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         listRenderType = new javax.swing.JList();
         checkBoxIncludeSkylight = new javax.swing.JCheckBox();
+        coordinateXmin = new javax.swing.JTextField();
+        jSpinner1 = new javax.swing.JSpinner();
+        coordinateXmax = new javax.swing.JFormattedTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         mInformation = new javax.swing.JMenu();
         mVersion = new javax.swing.JMenuItem();
@@ -155,10 +167,14 @@ public class Window extends javax.swing.JFrame {
         mLangEnglish = new javax.swing.JRadioButtonMenuItem();
         mLangPolish = new javax.swing.JRadioButtonMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
+        jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
 
         jMenu1.setText("jMenu1");
 
@@ -293,6 +309,31 @@ public class Window extends javax.swing.JFrame {
 
         checkBoxIncludeSkylight.setText("Include skylight");
 
+        coordinateXmin.setText("0");
+        coordinateXmin.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                coordinateXminFocusLost(evt);
+            }
+        });
+
+        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), null, null, Integer.valueOf(16)));
+        jSpinner1.setName(""); // NOI18N
+
+        coordinateXmax.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        coordinateXmax.setText("0");
+        coordinateXmax.setToolTipText("");
+        coordinateXmax.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                coordinateXmaxcoordinateXminFocusLost(evt);
+            }
+        });
+
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel4.setText("or type the path");
+
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel3.setText("Select profile / world");
+
         jMenuBar1.setToolTipText("");
 
         mInformation.setText("About");
@@ -337,15 +378,38 @@ public class Window extends javax.swing.JFrame {
 
         jMenu2.setText("Advanced");
 
-        jMenuItem4.setText("Save settings");
+        jMenuItem3.setText("Preview parameters");
+        jMenu2.add(jMenuItem3);
+
+        jMenuItem4.setText("Dump colors -> colors dumped as colors.txt");
         jMenu2.add(jMenuItem4);
 
-        jMenuItem5.setText("Reset settings");
+        jMenuItem5.setText("Load colors (colors-set1.txt)");
         jMenu2.add(jMenuItem5);
+
+        jCheckBoxMenuItem2.setSelected(true);
+        jCheckBoxMenuItem2.setText("Load colors (colors-set1.txt)");
+        jMenu2.add(jCheckBoxMenuItem2);
         jMenu2.add(jSeparator2);
 
-        jMenuItem3.setText("Delete all worlds");
-        jMenu2.add(jMenuItem3);
+        jCheckBoxMenuItem1.setText("Force render as nether");
+        jCheckBoxMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jCheckBoxMenuItem1);
+
+        jMenuItem6.setText("Rendering bounds");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem6);
+
+        jMenuItem7.setText("Command help (english only)");
+        jMenu2.add(jMenuItem7);
 
         jMenuBar1.add(jMenu2);
 
@@ -361,16 +425,27 @@ public class Window extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lOutputFilename)
-                            .addComponent(lCustomPath)
-                            .addComponent(lSingleplayerSave, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                            .addComponent(lTopLeftCorner, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                            .addComponent(lRenderWorld, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                            .addComponent(lRenderType, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3)
+                            .addComponent(jScrollPane4)
+                            .addComponent(lTopLeftCorner, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lRenderWorld, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lRenderType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2)
                             .addComponent(jButton1)
-                            .addComponent(checkBoxIncludeSkylight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(checkBoxIncludeSkylight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lSingleplayerSave, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lCustomPath, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                .addGap(27, 27, 27))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(coordinateXmin, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(coordinateXmax, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(10, 10, 10)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ComboSelectWorld, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -392,7 +467,7 @@ public class Window extends javax.swing.JFrame {
                         .addGap(8, 8, 8)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(memVal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(memVal, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(memLabel))
                             .addComponent(otherParameters)
@@ -406,11 +481,11 @@ public class Window extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ComboSelectWorld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lSingleplayerSave))
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lCustomPath)
-                    .addComponent(SelectedWorldPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(SelectedWorldPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lOutputFilename)
@@ -418,7 +493,9 @@ public class Window extends javax.swing.JFrame {
                 .addGap(5, 5, 5)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(generateMapButton)
-                    .addComponent(newWindowButton))
+                    .addComponent(newWindowButton)
+                    .addComponent(lCustomPath)
+                    .addComponent(lSingleplayerSave))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -438,7 +515,12 @@ public class Window extends javax.swing.JFrame {
                                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(checkBoxIncludeSkylight)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(coordinateXmin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(coordinateXmax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton1)
                                 .addGap(1, 1, 1)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -468,8 +550,13 @@ public class Window extends javax.swing.JFrame {
 
     private void selectWorld(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_selectWorld
         if (ComboSelectWorld.getSelectedIndex() == -1) return;
-        SelectedWorldPath.setText(System.getenv("APPDATA")+"\\.minecraft\\saves\\"
+        String sep = System.getProperty("file.separator");
+        if (System.getenv("APPDATA") != null)
+            SelectedWorldPath.setText(System.getenv("APPDATA")+sep+".minecraft"+sep+"saves"+sep
                 +ComboSelectWorld.getItemAt(ComboSelectWorld.getSelectedIndex()).toString());
+        else
+            SelectedWorldPath.setText(System.getProperty("user.home")+sep+".minecraft"+sep+"saves"+sep
+                    +ComboSelectWorld.getItemAt(ComboSelectWorld.getSelectedIndex()).toString());
         changeOutputFileName();
     }//GEN-LAST:event_selectWorld
 
@@ -538,7 +625,11 @@ public class Window extends javax.swing.JFrame {
     }//GEN-LAST:event_generujSwiat
 
     private void zmianaLimituPamieci(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_zmianaLimituPamieci
-        memLabel.setText(new Integer((int)Math.pow(2,memVal.getValue()/(float)100)).toString() + " MB");
+        Integer memlimit = new Integer((int)Math.pow(2,memVal.getValue()/(float)100));
+        if (memlimit < 8192)
+        memLabel.setText(memlimit.toString() + " MB");
+        else
+        memLabel.setText("<html><font color=red><b>" + memlimit.toString() + "&nbsp;MB</b></font></html>");
     }//GEN-LAST:event_zmianaLimituPamieci
 
     private void newWindowClick(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newWindowClick
@@ -563,6 +654,7 @@ public class Window extends javax.swing.JFrame {
         map.put("lRenderWorld", "Render World:");
         map.put("lRenderType", "Render type:");
         map.put("checkBox64bit", "64 bit version");
+        map.put("IncludeSkylight", "Include skylight");
         map.put("mLanguage", "Language");
         map.put("version", "Verion: ");
         map.put("updateTo", "Update to: ");
@@ -599,6 +691,7 @@ public class Window extends javax.swing.JFrame {
         map.put("lRenderWorld", "Świat:");
         map.put("lRenderType", "Typ generowania:");
         map.put("checkBox64bit", "Wersja 64 bitowa");
+        map.put("IncludeSkylight", "Uwzględniaj słońce");
         map.put("mInformation", "Informacje");
         map.put("mLanguage", "Język");
         map.put("version", "Wersja: ");
@@ -622,6 +715,18 @@ public class Window extends javax.swing.JFrame {
         
         changeLanguage(map);
         mLangPolish.setSelected(true);
+        
+        JRadioButtonMenuItem newrb = new javax.swing.JRadioButtonMenuItem();
+
+        newrb.setText("English (non-default)");
+        newrb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeLanguageEnglish(evt);
+            }
+        });
+        mLanguage.add(newrb);
+        mLanguage.remove(0);
+
         
     }//GEN-LAST:event_changeLanguagePolish
 
@@ -654,6 +759,87 @@ public class Window extends javax.swing.JFrame {
         changeOutputFileName();
     }//GEN-LAST:event_listRenderTypeValueChanged
 
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        
+        String[] items = {"One", "Two", "Three", "Four", "Five"};
+        JComboBox combo = new JComboBox(items);
+        JTextField field1 = new JTextField("1234.56");
+        JTextField field2 = new JTextField("9876.54");
+        JPanel panel = new JPanel(new GridLayout(0, 1));
+        panel.add(combo);
+        panel.add(new JLabel("Field 1:"));
+        panel.add(field1);
+        panel.add(new JLabel("Field 2:"));
+        panel.add(field2);
+        int result = JOptionPane.showConfirmDialog(null, panel, "Test",
+            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            System.out.println(combo.getSelectedItem()
+                + " " + field1.getText()
+                + " " + field2.getText());
+        } else {
+            System.out.println("Cancelled");
+        }
+        //new Bounds().run();
+        
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jCheckBoxMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBoxMenuItem1ActionPerformed
+
+    private void coordinateXmaxcoordinateXminFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_coordinateXmaxcoordinateXminFocusLost
+        Long num;
+
+        num = new Long(coordinateXmin.getText());
+        num = (long)Math.floor((double)num/16)*16;
+        coordinateXmin.setText(num.toString());
+
+        num = new Long(coordinateXmax.getText());
+        if (num % 16 == 0)
+        num = (long)Math.ceil((double)num/16)*16 + 15;
+        else
+        num = (long)Math.ceil((double)num/16)*16 - 1;
+        coordinateXmax.setText(num.toString());
+    }//GEN-LAST:event_coordinateXmaxcoordinateXminFocusLost
+
+    private void coordinateXminFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_coordinateXminFocusLost
+        Long num;
+
+        num = new Long(coordinateXmin.getText());
+        num = (long)Math.floor((double)num/16)*16;
+        coordinateXmin.setText(num.toString());
+
+        num = new Long(coordinateXmax.getText());
+        if (num % 16 == 0)
+        num = (long)Math.ceil((double)num/16)*16 + 15;
+        else
+        num = (long)Math.ceil((double)num/16)*16 - 1;
+        coordinateXmax.setText(num.toString());
+    }//GEN-LAST:event_coordinateXminFocusLost
+
+        private static void display() {
+        String[] items = {"One", "Two", "Three", "Four", "Five"};
+        JComboBox combo = new JComboBox(items);
+        JTextField field1 = new JTextField("1234.56");
+        JTextField field2 = new JTextField("9876.54");
+        JPanel panel = new JPanel(new GridLayout(0, 1));
+        panel.add(combo);
+        panel.add(new JLabel("Field 1:"));
+        panel.add(field1);
+        panel.add(new JLabel("Field 2:"));
+        panel.add(field2);
+        int result = JOptionPane.showConfirmDialog(null, panel, "Test",
+            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            System.out.println(combo.getSelectedItem()
+                + " " + field1.getText()
+                + " " + field2.getText());
+        } else {
+            System.out.println("Cancelled");
+        }
+    }
+        
     private void changeOutputFileName() {                                      
         if (ComboSelectWorld.getSelectedIndex() == -1) return;
         
@@ -719,6 +905,7 @@ public class Window extends javax.swing.JFrame {
         lRenderWorld.setText(map.get("lRenderWorld"));
         lRenderType.setText(map.get("lRenderType"));
         checkBox64bit.setText(map.get("checkBox64bit"));
+        checkBoxIncludeSkylight.setText(map.get("IncludeSkylight"));
         mInformation.setText(map.get("mInformation"));
         mLanguage.setText(map.get("mLanguage"));
         newWindowButton.setText(map.get("newWindowButton"));
@@ -821,8 +1008,14 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JCheckBox checkBoxIncludeSkylight;
     javax.swing.JList consoleList;
     private javax.swing.JScrollPane consolePanel;
+    private javax.swing.JFormattedTextField coordinateXmax;
+    private javax.swing.JTextField coordinateXmin;
     javax.swing.JButton generateMapButton;
     private javax.swing.JButton jButton1;
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -831,6 +1024,8 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JPopupMenu jPopupMenu2;
     javax.swing.JProgressBar jProgressBar1;
@@ -840,6 +1035,7 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JSpinner jSpinner1;
     private javax.swing.JRadioButton lCustomPath;
     private javax.swing.JLabel lMemoryLimit;
     private javax.swing.JLabel lOtherParams;
