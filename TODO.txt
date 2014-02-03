@@ -5,5 +5,5 @@ TODO:
 -save on close and question if map is not fully renderred
 -breaking rendering
 -fixing window constructor
--no compatible mcmap in directory - show notice
+-no compatible mcmap in directory - show notice and download
 DONE:

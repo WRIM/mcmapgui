@@ -6,13 +6,16 @@
 
 package mcmap;
 
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 
 /**
  *
@@ -20,6 +23,11 @@ import javax.swing.JTextField;
  */
 public class Bounds extends javax.swing.JPanel {
 
+    boolean checkBounds = false;
+    int unit = 1;
+    int Ymin, Ymax;
+    long Xmin = 0, Xmax = 0, Zmin = 0, Zmax = 0;
+    
     /**
      * Creates new form bounds
      */
@@ -50,8 +58,55 @@ public class Bounds extends javax.swing.JPanel {
         display();
     }
     
-    public Bounds() {
+    public Bounds()
+    {
+        this(false, new int[] {0,0,0,0,255,0,0});
+    }
+    
+    public Bounds(boolean check, int[] vals)
+    {
+        checkBounds = check;
+        int i = 0;
+        Xmin = vals[i++];
+        Ymin = vals[i++];
+        Zmin = vals[i++];
+        Xmax = vals[i++];
+        Ymax = vals[i++];
+        Zmax = vals[i++];
+        unit = vals[i++];
+        
         initComponents();
+        if (checkBounds)
+        {
+            checkBoxAreaToRender.setSelected(true);
+            checkCheckbox();
+        }
+        coordinateYmin.setValue(Ymin);
+        coordinateYmax.setValue(Ymax);
+        
+        //TODO check what's limits?
+        int times = 1, step = 1;
+        switch(unit)
+        {
+            case 0:
+                times = 512;
+                step = 16;
+                break;
+            case 1:
+                times = 32;
+                step = 1;
+                break;
+            case 2:
+                times = 1;
+                step = 1;
+                break;
+        }
+        coordinateXmin.setModel(new SpinnerNumberModel(Xmin*times/32, Long.MIN_VALUE, Long.MAX_VALUE, step));
+        coordinateXmax.setModel(new SpinnerNumberModel(Xmax*times/32, Long.MIN_VALUE, Long.MAX_VALUE, step));
+        coordinateZmin.setModel(new SpinnerNumberModel(Zmin*times/32, Long.MIN_VALUE, Long.MAX_VALUE, step));
+        coordinateZmax.setModel(new SpinnerNumberModel(Zmax*times/32, Long.MIN_VALUE, Long.MAX_VALUE, step));
+        JRadioButton[] radio = new JRadioButton[] {radioBlocks, radioChunks, radioFiles};
+        radioUnit.setSelected(radio[unit].getModel(), true);
     }
         
     public static void main(String[] args) {
@@ -72,15 +127,6 @@ public class Bounds extends javax.swing.JPanel {
         JOptionPane.showMessageDialog(null, panel, "Test",
             JOptionPane.PLAIN_MESSAGE);
         
-        int y=0;
-        while(y==0)
-        {
-            try{
-                Thread.sleep(1000);
-            }catch(Exception e){
-                
-            }
-        }
     }
 
     /**
@@ -92,29 +138,29 @@ public class Bounds extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        Unit = new javax.swing.ButtonGroup();
+        radioUnit = new javax.swing.ButtonGroup();
         jFrame1 = new javax.swing.JFrame();
         jColorChooser1 = new javax.swing.JColorChooser();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        checkBoxAreaToRender = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
-        jSpinner2 = new javax.swing.JSpinner();
+        coordinateYmin = new javax.swing.JSpinner();
+        coordinateYmax = new javax.swing.JSpinner();
         jLabel3 = new javax.swing.JLabel();
         jCheckBox2 = new javax.swing.JCheckBox();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jSpinner3 = new javax.swing.JSpinner();
-        jSpinner4 = new javax.swing.JSpinner();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jSpinner5 = new javax.swing.JSpinner();
-        jSpinner6 = new javax.swing.JSpinner();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
+        labelX = new javax.swing.JLabel();
+        labelZ = new javax.swing.JLabel();
+        coordinateXmin = new javax.swing.JSpinner();
+        coordinateXmax = new javax.swing.JSpinner();
+        labelToX = new javax.swing.JLabel();
+        labelFromX = new javax.swing.JLabel();
+        coordinateZmin = new javax.swing.JSpinner();
+        coordinateZmax = new javax.swing.JSpinner();
+        labelToZ = new javax.swing.JLabel();
+        labelFromZ = new javax.swing.JLabel();
+        radioBlocks = new javax.swing.JRadioButton();
+        radioChunks = new javax.swing.JRadioButton();
+        radioFiles = new javax.swing.JRadioButton();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -127,194 +173,248 @@ public class Bounds extends javax.swing.JPanel {
             .addGap(0, 300, Short.MAX_VALUE)
         );
 
-        jCheckBox1.setText("Area to render:");
+        checkBoxAreaToRender.setText("Area to render:");
+        checkBoxAreaToRender.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBoxAreaToRenderActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Render heights");
 
         jLabel2.setText("From:");
 
-        jSpinner2.setToolTipText("");
-        jSpinner2.setName(""); // NOI18N
-        jSpinner2.setRequestFocusEnabled(false);
-        jSpinner2.setValue(255);
+        coordinateYmin.setModel(new javax.swing.SpinnerNumberModel(0, 0, 255, 1));
+        coordinateYmin.setNextFocusableComponent(coordinateYmax);
+        coordinateYmin.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                coordinateYminStateChanged(evt);
+            }
+        });
+
+        coordinateYmax.setModel(new javax.swing.SpinnerNumberModel(255, 0, 255, 1));
+        coordinateYmax.setToolTipText("");
+        coordinateYmax.setName(""); // NOI18N
+        coordinateYmax.setNextFocusableComponent(coordinateYmin);
+        coordinateYmax.setRequestFocusEnabled(false);
+        coordinateYmax.setValue(255);
+        coordinateYmax.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                coordinateYmaxStateChanged(evt);
+            }
+        });
 
         jLabel3.setText("To:");
 
         jCheckBox2.setText("Increase scaling");
 
-        jLabel6.setText("Axis X");
-        jLabel6.setEnabled(false);
+        labelX.setText("Axis X");
+        labelX.setEnabled(false);
 
-        jLabel9.setText("Axis Z");
-        jLabel9.setEnabled(false);
+        labelZ.setText("Axis Z");
+        labelZ.setEnabled(false);
 
-        jSpinner3.setEnabled(false);
-        jSpinner3.setValue(-512);
+        coordinateXmin.setEnabled(false);
+        coordinateXmin.setValue(-512);
+        coordinateXmin.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                coordinateXminStateChanged(evt);
+            }
+        });
 
-        jSpinner4.setToolTipText("");
-        jSpinner4.setEnabled(false);
-        jSpinner4.setName(""); // NOI18N
-        jSpinner4.setRequestFocusEnabled(false);
-        jSpinner4.setValue(511);
+        coordinateXmax.setToolTipText("");
+        coordinateXmax.setEnabled(false);
+        coordinateXmax.setName(""); // NOI18N
+        coordinateXmax.setRequestFocusEnabled(false);
+        coordinateXmax.setValue(511);
 
-        jLabel4.setText("To:");
-        jLabel4.setEnabled(false);
+        labelToX.setText("To:");
+        labelToX.setEnabled(false);
 
-        jLabel5.setText("From:");
-        jLabel5.setEnabled(false);
+        labelFromX.setText("From:");
+        labelFromX.setEnabled(false);
 
-        jSpinner5.setEnabled(false);
-        jSpinner5.setValue(-512);
+        coordinateZmin.setEnabled(false);
+        coordinateZmin.setValue(-512);
 
-        jSpinner6.setToolTipText("");
-        jSpinner6.setEnabled(false);
-        jSpinner6.setName(""); // NOI18N
-        jSpinner6.setRequestFocusEnabled(false);
-        jSpinner6.setValue(511);
+        coordinateZmax.setToolTipText("");
+        coordinateZmax.setEnabled(false);
+        coordinateZmax.setName(""); // NOI18N
+        coordinateZmax.setRequestFocusEnabled(false);
+        coordinateZmax.setValue(511);
 
-        jLabel7.setText("To:");
-        jLabel7.setEnabled(false);
+        labelToZ.setText("To:");
+        labelToZ.setEnabled(false);
 
-        jLabel8.setText("From:");
-        jLabel8.setEnabled(false);
+        labelFromZ.setText("From:");
+        labelFromZ.setEnabled(false);
 
-        Unit.add(jRadioButton1);
-        jRadioButton1.setSelected(true);
-        jRadioButton1.setText("Blocks");
-        jRadioButton1.setEnabled(false);
+        radioUnit.add(radioBlocks);
+        radioBlocks.setSelected(true);
+        radioBlocks.setText("Blocks");
+        radioBlocks.setEnabled(false);
 
-        Unit.add(jRadioButton2);
-        jRadioButton2.setText("Chunks");
-        jRadioButton2.setEnabled(false);
+        radioUnit.add(radioChunks);
+        radioChunks.setText("Chunks");
+        radioChunks.setEnabled(false);
 
-        Unit.add(jRadioButton3);
-        jRadioButton3.setText(".mcr/.mca files");
-        jRadioButton3.setEnabled(false);
+        radioUnit.add(radioFiles);
+        radioFiles.setText(".mcr/.mca files");
+        radioFiles.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox1)
+                    .addComponent(checkBoxAreaToRender)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(labelX, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(labelFromX, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(labelToX, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSpinner3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSpinner4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(coordinateXmin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(coordinateXmax, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(21, 21, 21)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(labelZ, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(labelFromZ, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(labelToZ, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSpinner5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSpinner6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(coordinateZmin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(coordinateZmax, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(radioBlocks, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRadioButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(radioChunks, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jRadioButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                        .addComponent(radioFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSpinner1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSpinner2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(coordinateYmin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(coordinateYmax, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jCheckBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addContainerGap())
+                    .addComponent(jLabel1)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBox1)
+                    .addComponent(checkBoxAreaToRender)
                     .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(coordinateYmin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(coordinateYmax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel5))
+                                    .addComponent(coordinateXmin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labelFromX))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4)))
+                                    .addComponent(coordinateXmax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labelToX)))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel9)
-                                .addComponent(jLabel6))
+                                .addComponent(labelZ)
+                                .addComponent(labelX))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jSpinner5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel8))
+                                    .addComponent(coordinateZmin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labelFromZ))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jSpinner6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel7))))))
+                                    .addComponent(coordinateZmax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labelToZ))))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jCheckBox2)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jRadioButton1)
-                            .addComponent(jRadioButton2)
-                            .addComponent(jRadioButton3))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(radioBlocks)
+                            .addComponent(radioChunks)
+                            .addComponent(radioFiles)))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void coordinateYminStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_coordinateYminStateChanged
+        if (Integer.parseInt(coordinateYmax.getValue().toString()) < 
+                Integer.parseInt(coordinateYmin.getValue().toString()))
+        {
+            coordinateYmax.setValue(coordinateYmin.getValue());
+        }
+    }//GEN-LAST:event_coordinateYminStateChanged
+
+    private void coordinateYmaxStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_coordinateYmaxStateChanged
+        if (Integer.parseInt(coordinateYmax.getValue().toString()) < 
+                Integer.parseInt(coordinateYmin.getValue().toString()))
+        {
+            coordinateYmin.setValue(coordinateYmax.getValue());
+        }
+    }//GEN-LAST:event_coordinateYmaxStateChanged
+
+    private void checkBoxAreaToRenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxAreaToRenderActionPerformed
+        checkCheckbox();
+    }//GEN-LAST:event_checkBoxAreaToRenderActionPerformed
+
+    private void coordinateXminStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_coordinateXminStateChanged
+        System.out.println(coordinateXmin.getValue());
+    }//GEN-LAST:event_coordinateXminStateChanged
+
+    private void checkCheckbox()
+    {
+        boolean value = checkBoxAreaToRender.isSelected();
+        Component cm[] = {labelFromX, labelFromZ, labelToX, labelToZ, labelX, labelZ, 
+            radioBlocks, radioChunks, radioFiles, 
+            coordinateXmax, coordinateXmin, coordinateZmax, coordinateZmin};
+        for (Component c: cm) {
+            c.setEnabled(value);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup Unit;
-    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox checkBoxAreaToRender;
+    private javax.swing.JSpinner coordinateXmax;
+    private javax.swing.JSpinner coordinateXmin;
+    private javax.swing.JSpinner coordinateYmax;
+    private javax.swing.JSpinner coordinateYmin;
+    private javax.swing.JSpinner coordinateZmax;
+    private javax.swing.JSpinner coordinateZmin;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JColorChooser jColorChooser1;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JSpinner jSpinner2;
-    private javax.swing.JSpinner jSpinner3;
-    private javax.swing.JSpinner jSpinner4;
-    private javax.swing.JSpinner jSpinner5;
-    private javax.swing.JSpinner jSpinner6;
+    private javax.swing.JLabel labelFromX;
+    private javax.swing.JLabel labelFromZ;
+    private javax.swing.JLabel labelToX;
+    private javax.swing.JLabel labelToZ;
+    private javax.swing.JLabel labelX;
+    private javax.swing.JLabel labelZ;
+    private javax.swing.JRadioButton radioBlocks;
+    private javax.swing.JRadioButton radioChunks;
+    private javax.swing.JRadioButton radioFiles;
+    private javax.swing.ButtonGroup radioUnit;
     // End of variables declaration//GEN-END:variables
 }

@@ -25,6 +25,9 @@ public class RunMe extends Thread {
     String command;
     Window myWindow;
     
+    //TODO command window structure reorganization
+    //TODO espesially write new controller
+    
     public RunMe(String cmd, Window win)
     {
         command = cmd;

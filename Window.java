@@ -32,6 +32,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 /**
@@ -42,6 +43,13 @@ public class Window extends javax.swing.JFrame {
 
     //static String lang = "Język polski";
     private String mcmapEXE;
+    static Object lang;
+    
+    //TODO languages
+    static
+    {
+        
+    }
     
     /**
      * Creates new form NewJFrame
@@ -190,11 +198,14 @@ public class Window extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
+        jCheckBoxMenuItem3 = new javax.swing.JCheckBoxMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        mNimbus = new javax.swing.JRadioButtonMenuItem();
 
         jMenu1.setText("jMenu1");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("mcmap 2.4.2b (2.4.2d update available)");
         setMinimumSize(new java.awt.Dimension(460, 660));
 
@@ -215,9 +226,7 @@ public class Window extends javax.swing.JFrame {
             }
         });
 
-        ComboSelectWorld.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         ComboSelectWorld.setSelectedItem(null);
-        ComboSelectWorld.setToolTipText("");
         ComboSelectWorld.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 selectWorld(evt);
@@ -232,11 +241,6 @@ public class Window extends javax.swing.JFrame {
         lCustomPath.setText("Custom path");
 
         consoleList.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
-        consoleList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
         consolePanel.setViewportView(consoleList);
 
         generateMapButton.setText("Generate map");
@@ -425,10 +429,25 @@ public class Window extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem6);
 
+        jCheckBoxMenuItem3.setText("Increase y scalling");
+        jMenu2.add(jCheckBoxMenuItem3);
+
         jMenuItem7.setText("Command help (english only)");
         jMenu2.add(jMenuItem7);
 
         jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("Skin");
+
+        mNimbus.setText("Nimbus");
+        mNimbus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mNimbusActionPerformed(evt);
+            }
+        });
+        jMenu3.add(mNimbus);
+
+        jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
 
@@ -780,6 +799,7 @@ public class Window extends javax.swing.JFrame {
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
         
+        /*
         String[] items = {"One", "Two", "Three", "Four", "Five"};
         JComboBox combo = new JComboBox(items);
         JTextField field1 = new JTextField("1234.56");
@@ -799,7 +819,9 @@ public class Window extends javax.swing.JFrame {
         } else {
             System.out.println("Cancelled");
         }
-        //new Bounds().run();
+        */
+        
+        new Bounds().main(new String[]{});
         
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
@@ -836,6 +858,16 @@ public class Window extends javax.swing.JFrame {
         num = (long)Math.ceil((double)num/16)*16 - 1;
         coordinateXmax.setText(num.toString());
     }//GEN-LAST:event_coordinateXminFocusLost
+
+    private void mNimbusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mNimbusActionPerformed
+        try {
+                //UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+                UIManager.setLookAndFeel(new com.jtattoo.plaf.aero.AeroLookAndFeel());
+                } catch(Exception e) {
+                    JOptionPane.showMessageDialog(this, e.toString(), "Błąd", JOptionPane.ERROR_MESSAGE);
+                }
+                SwingUtilities.updateComponentTreeUI(this);
+    }//GEN-LAST:event_mNimbusActionPerformed
 
         private static void display() {
         String[] items = {"One", "Two", "Three", "Four", "Five"};
@@ -980,19 +1012,24 @@ public class Window extends javax.swing.JFrame {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         
+        System.out.println(UIManager.getSystemLookAndFeelClassName());
+        
         for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 System.out.println(info.getName());
             }
-        
+
         
         try {
-            /*            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
             if ("".equals(info.getName())) {
             javax.swing.UIManager.setLookAndFeel(info.getClassName());
             break;
             }
-            }*/
+            }
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//            UIManager.setLookAndFeel("de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel");
+//            UIManager.setLookAndFeel(new com.jtattoo.plaf.fast.FastLookAndFeel());
+            
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(Window.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
@@ -1006,7 +1043,7 @@ public class Window extends javax.swing.JFrame {
 
         /* Create and display the form */
         
-        if (args.length == 1 && args[0].equals("Constructor"))
+        if (args.length == 1 && args[0].equals("Constructor"))  //TODO cleanup that mess
             return;
         
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -1033,10 +1070,12 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem3;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
@@ -1071,6 +1110,7 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JRadioButtonMenuItem mLangEnglish;
     private javax.swing.JRadioButtonMenuItem mLangPolish;
     private javax.swing.JMenu mLanguage;
+    private javax.swing.JRadioButtonMenuItem mNimbus;
     private javax.swing.JMenuItem mUpdate;
     private javax.swing.JMenuItem mVersion;
     private javax.swing.JLabel memLabel;
