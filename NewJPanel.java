@@ -8,7 +8,7 @@ package mcmap;
 
 /**
  *
- * @author Tomek
+ * @author WRIM
  */
 public class NewJPanel extends javax.swing.JPanel {
 
